@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://localhost:3000/api/auth/signup.php -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - ElectroStore</title>
+
+    <!-- Google Font -->
+    <link href="./Signup - ElectroStore_files/css2" rel="stylesheet">
+
+    <!-- FIXED: CSS path for api/auth folder structure -->
+    <link rel="stylesheet" href="./Signup - ElectroStore_files/style.css">
+
+    <style>
+        /* Fallback styles in case external CSS doesn't load */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #d0e5ebff 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .form-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-heading a {
+            text-decoration: none;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .form-heading strong {
+            color: #007bff;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+        
+        input[type="text"], input[type="email"], input[type="password"] {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        p {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        p a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        p a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .password-strength {
+            font-size: 12px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+        
+        .weak { color: #dc3545; }
+        .medium { color: #ffc107; }
+        .strong { color: #28a745; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="form-heading">
+            <!-- FIXED: Link path for api/auth folder structure -->
+            <a href="http://localhost:3000/index.php" style="text-decoration: none; color: #333;">Signup to <strong style="color: #007bff;">ElectroStore</strong></a>
+        </div>
+
+        
+        
+        <!-- Enhanced form with better validation -->
+        <form id="signupForm" onsubmit="return handleSubmit()" method="POST" action="http://localhost:3000/api/auth/signup.php">
+            <label for="username" class="visually-hidden">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username (3-20 characters)" required="" minlength="3" maxlength="20" autocomplete="username">
+
+            <label for="email" class="visually-hidden">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email Address" required="" autocomplete="email">
+
+            <label for="password" class="visually-hidden">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password (min. 6 characters)" required="" minlength="6" autocomplete="new-password">
+            
+            <div id="passwordStrength" class="password-strength" style="display: none;"></div>
+
+            <button type="submit" id="signupBtn">Create Account</button>
+        </form>
+
+        <p>Already have an account? <a href="http://localhost:3000/api/auth/login.php">Login here</a></p>
+    </div>
+
+    <!-- FIXED: JavaScript path for api/auth folder structure -->
+    <script src="./Signup - ElectroStore_files/validation.js.download"></script>
+    <script>
+        // Enhanced validation and user experience
+        function handleSubmit() {
+            const form = document.getElementById('signupForm');
+            const btn = document.getElementById('signupBtn');
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Client-side validation
+            if (username.length < 3 || username.length > 20) {
+                alert('Username must be between 3 and 20 characters.');
+                return false;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                alert('Username can only contain letters, numbers, and underscores.');
+                return false;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                return false;
+            }
+
+            // Show loading state
+            btn.textContent = 'Creating Account...';
+            form.classList.add('loading');
+            
+            return true;
+        }
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            strengthDiv.style.display = 'block';
+            
+            let strength = 0;
+            let feedback = '';
+            
+            if (password.length >= 6) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+            
+            if (strength < 2) {
+                strengthDiv.className = 'password-strength weak';
+                feedback = 'Weak password';
+            } else if (strength < 3) {
+                strengthDiv.className = 'password-strength medium';
+                feedback = 'Medium strength';
+            } else {
+                strengthDiv.className = 'password-strength strong';
+                feedback = 'Strong password';
+            }
+            
+            strengthDiv.textContent = feedback;
+        });
+
+        // Remove loading state if there's an error and page reloads
+        window.addEventListener('load', function() {
+            const form = document.getElementById('signupForm');
+            const btn = document.getElementById('signupBtn');
+            
+            if (form.classList.contains('loading')) {
+                form.classList.remove('loading');
+                btn.textContent = 'Create Account';
+            }
+        });
+
+        // Username validation on input
+        document.getElementById('username').addEventListener('input', function() {
+            const username = this.value;
+            if (username && !/^[a-zA-Z0-9_]*$/.test(username)) {
+                this.setCustomValidity('Username can only contain letters, numbers, and underscores.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+
+</body></html>
